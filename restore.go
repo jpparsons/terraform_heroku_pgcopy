@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -20,6 +21,12 @@ func main() {
 	flag.StringVar(&flgFromApp, "fromApp", "", "Heroku from DB backup app name")
 	flag.StringVar(&flgBackupID, "backupID", "", "Optional DB backupID, defaults to last backup taken.")
 	flag.Parse()
+
+	// prevent this
+	if flgToApp == "productplan-production" {
+		fmt.Fprintln(os.Stderr, "ERROR: to app name cannot be productplan-production!")
+		os.Exit(1)
+	}
 
 	// Heroku API does not support restore operations, only commandline
 	// https://github.com/heroku/platform-api/issues/72
