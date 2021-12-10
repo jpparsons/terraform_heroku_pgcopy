@@ -14,10 +14,6 @@ resource "heroku_app" "restores" {
     personal = var.personal ? true : false
   }
 
-  #config_vars {
-  #  RAILS_ENV = "staging"
-  #}
-
   # is it ready?
   # https://devcenter.heroku.com/articles/using-terraform-with-heroku#use-provisioner-health-checks
   # https://github.com/heroku-examples/terraform-heroku-enterprise-kong-microservices/blob/master/main.tf
@@ -34,7 +30,6 @@ resource "null_resource" "import" {
     restores_app = heroku_app.restores[each.key].uuid
   }
 
-  # TODO: allow to pass in a backup ID or use latest if not set
   provisioner "local-exec" {
     #command = "go run restore.go --fromApp=${var.backup_app_name} --toApp=${each.value} --backupID=${each.value}"
     command = "bin/restore --fromApp=${var.backup_app_name} --toApp=${each.value} --backupID=${each.value}"
